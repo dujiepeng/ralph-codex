@@ -14,8 +14,7 @@ Ralph is a Codex-focused skills project for interactive PRD planning and autonom
 |------|---------|
 | `skills/ralph-prd/` | Interactively clarify a feature and save `tasks/prd-[feature-name].md` |
 | `skills/ralph-json/` | Convert a Ralph PRD markdown file into `./ralph/prd.json` |
-| `ralph/ralph.sh` | Runtime script copied into target projects as `./ralph/ralph.sh` |
-| `ralph/CODEX.md` | Prompt used by `./ralph/ralph.sh` for each Codex iteration |
+| `skills/ralph-json/resources/` | Runtime template copied into target projects as `./ralph/` |
 | `.agents/skills/` | Project-local links used for local Codex testing |
 
 ## Recommended Workflow
@@ -35,12 +34,12 @@ cd ralph
 
 ## First Use In A Project
 
-1. Bootstrap the Ralph runtime into the target project:
+1. Bootstrap the Ralph runtime into the target project from `skills/ralph-json/resources/`:
 
 ```bash
 mkdir -p ./ralph
-cp /path/to/ralph/ralph/ralph.sh ./ralph/ralph.sh
-cp /path/to/ralph/ralph/CODEX.md ./ralph/CODEX.md
+cp /path/to/ralph/skills/ralph-json/resources/ralph.sh ./ralph/ralph.sh
+cp /path/to/ralph/skills/ralph-json/resources/CODEX.md ./ralph/CODEX.md
 chmod +x ./ralph/ralph.sh
 ```
 
@@ -70,8 +69,8 @@ From the target project root:
 
 ```bash
 mkdir -p ./ralph
-cp /path/to/ralph/ralph/ralph.sh ./ralph/ralph.sh
-cp /path/to/ralph/ralph/CODEX.md ./ralph/CODEX.md
+cp /path/to/ralph/skills/ralph-json/resources/ralph.sh ./ralph/ralph.sh
+cp /path/to/ralph/skills/ralph-json/resources/CODEX.md ./ralph/CODEX.md
 chmod +x ./ralph/ralph.sh
 ```
 

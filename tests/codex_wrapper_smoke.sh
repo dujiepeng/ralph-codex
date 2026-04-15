@@ -34,20 +34,21 @@ assert_contains() {
   fi
 }
 
-assert_exists "$ROOT_DIR/ralph/ralph.sh"
-assert_exists "$ROOT_DIR/ralph/CODEX.md"
 assert_exists "$ROOT_DIR/skills/ralph-prd/SKILL.md"
 assert_exists "$ROOT_DIR/skills/ralph-json/SKILL.md"
+assert_exists "$ROOT_DIR/skills/ralph-json/resources/ralph.sh"
+assert_exists "$ROOT_DIR/skills/ralph-json/resources/CODEX.md"
 
 assert_missing "$ROOT_DIR/bin"
 assert_missing "$ROOT_DIR/skills/prd"
 assert_missing "$ROOT_DIR/skills/ralph"
+assert_missing "$ROOT_DIR/ralph"
 
 assert_contains "$ROOT_DIR/README.md" 'Use `ralph-prd` in your current Codex CLI session'
 assert_contains "$ROOT_DIR/README.md" 'Use `ralph-json` in your current Codex CLI session'
 assert_contains "$ROOT_DIR/README.md" 'tasks/prd-[feature-name].md'
-assert_contains "$ROOT_DIR/README.md" 'cd ralph'
-assert_contains "$ROOT_DIR/README.md" './ralph.sh 10'
+assert_contains "$ROOT_DIR/README.md" 'skills/ralph-json/resources/'
+assert_contains "$ROOT_DIR/README.md" './ralph/ralph.sh'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'name: ralph-prd'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Save to `tasks/prd-[feature-name].md`'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Filename:** `prd-[feature-name].md`'
