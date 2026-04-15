@@ -1,0 +1,13 @@
+# Ralph working files (generated during runs)
+ralph/prd.json
+ralph/progress.txt
+ralph/.last-branch
+
+# Archive is optional to commit
+# ralph/archive/
+
+# OS files
+.DS_Store
+
+# Codex local state
+.codex/
