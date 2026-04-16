@@ -1,12 +1,12 @@
 [中文说明](./README.zh-CN.md)
 
-# Ralph Skills For Codex
+# Ralph Skills
 
-Ralph is a Codex-focused workflow for turning a feature idea into a PRD, converting that PRD into `ralph/prd.json`, and then running an autonomous implementation loop from the target project.
+Ralph is a coding-agent workflow for turning a feature idea into a PRD, converting that PRD into `ralph/prd.json`, and then running an autonomous implementation loop from the target project.
 
 ## Prerequisites
 
-- Codex CLI installed and authenticated
+- Codex CLI or Kimi CLI installed and authenticated
 - `jq` installed
 - A git repository for the target project
 
@@ -17,21 +17,21 @@ Ralph is a Codex-focused workflow for turning a feature idea into a PRD, convert
 | `skills/ralph-prd/` | Interactively clarify a feature and save `tasks/prd-[feature-name].md` |
 | `skills/ralph-json/` | Convert a Ralph PRD markdown file into `./ralph/prd.json` |
 | `skills/ralph-json/resources/` | Runtime files copied into target projects as `./ralph/` |
-| `.agents/skills/` | Project-local skills for local Codex testing |
+| `.agents/skills/` | Project-local skills for local testing |
 
 ## Complete Workflow
 
 The intended flow is:
 
-1. Install `ralph-prd` and `ralph-json` into the target project or global Codex skills directory.
-2. In Codex, run `ralph-prd` to generate `tasks/prd-[feature-name].md`.
-3. In Codex, run `ralph-json` to convert that PRD into `./ralph/prd.json`.
-4. In the target project root, run `./ralph/ralph.sh` to execute the implementation loop.
+1. Install `ralph-prd` and `ralph-json` into the target project or global skills directory.
+2. Use `ralph-prd` in your current Codex CLI session or Kimi CLI session to generate `tasks/prd-[feature-name].md`.
+3. Use `ralph-json` in your current Codex CLI session or Kimi CLI session to convert that PRD into `./ralph/prd.json`.
+4. In the target project root, run `./ralph/ralph.sh` for the default Codex flow, or `./ralph/ralph.sh --tool kimi` to execute the Kimi flow.
 
 `ralph-json` is also responsible for ensuring these runtime files exist before it writes `./ralph/prd.json`:
 
 - `./ralph/ralph.sh`
-- `./ralph/CODEX.md`
+- `./ralph/RALPH.md`
 
 If either file is missing, `ralph-json` should copy it from `skills/ralph-json/resources/` and run:
 
@@ -65,7 +65,7 @@ cp -r /path/to/ralph-codex/skills/ralph-json ~/.agents/skills/ralph-json
 
 ## Step 2: Run `ralph-prd`
 
-In the target project's Codex session, invoke `ralph-prd`.
+In the target project's coding-agent session, invoke `ralph-prd`.
 
 Expected output:
 
@@ -79,7 +79,7 @@ What `ralph-prd` does:
 
 ## Step 3: Run `ralph-json`
 
-In the same target project's Codex session, invoke `ralph-json` and point it at the PRD from the previous step.
+In the same target project's coding-agent session, invoke `ralph-json` and point it at the PRD from the previous step.
 
 Expected output:
 
@@ -89,7 +89,7 @@ What `ralph-json` does:
 
 - reads `tasks/prd-[feature-name].md`
 - converts user stories into ordered JSON stories
-- ensures `./ralph/ralph.sh` and `./ralph/CODEX.md` exist
+- ensures `./ralph/ralph.sh` and `./ralph/RALPH.md` exist
 - makes `./ralph/ralph.sh` executable if it was copied in
 
 After this step, the project usually contains:
@@ -97,7 +97,7 @@ After this step, the project usually contains:
 - `tasks/prd-[feature-name].md`
 - `./ralph/prd.json`
 - `./ralph/ralph.sh`
-- `./ralph/CODEX.md`
+- `./ralph/RALPH.md`
 
 ## Step 4: Run `./ralph/ralph.sh`
 
@@ -107,24 +107,46 @@ From the target project root:
 ./ralph/ralph.sh
 ```
 
-Or with an explicit iteration limit:
+This defaults to Codex. To make that explicit:
+
+```bash
+./ralph/ralph.sh --tool codex
+```
+
+To run with Kimi:
+
+```bash
+./ralph/ralph.sh --tool kimi
+```
+
+To set an explicit Codex iteration limit:
 
 ```bash
 ./ralph/ralph.sh 10
 ```
 
+To set an explicit Kimi iteration limit:
+
+```bash
+./ralph/ralph.sh --tool kimi 10
+```
+
 ### Script Parameters
 
-`./ralph/ralph.sh [max_iterations]`
+`./ralph/ralph.sh [--tool <codex|kimi>] [max_iterations]`
 
+- `--tool`: optional, choose `codex` or `kimi`
 - `max_iterations`: optional positive integer
 - default: `10`
 
 Behavior:
 
+- if `--tool` is omitted, Ralph defaults to `codex`
+- `codex` runs `codex exec --full-auto`
+- `kimi` runs `kimi --yolo --print --final-message-only --prompt ...`
 - if omitted, Ralph runs with `10` iterations
 - if provided, it must be a numeric value such as `5`, `10`, or `20`
-- if more than one argument is provided, the script exits with usage information
+- if `--tool` is provided but unsupported, the script exits with usage information
 - if the argument is not numeric, the script exits with usage information
 
 ### Files Produced By `ralph.sh`

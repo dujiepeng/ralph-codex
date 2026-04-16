@@ -15,12 +15,12 @@ Converts existing PRDs to the prd.json format that Ralph uses for autonomous exe
 Before converting a PRD, check whether these runtime files already exist:
 
 - `./ralph/ralph.sh`
-- `./ralph/CODEX.md`
+- `./ralph/RALPH.md`
 
 If either file is missing, create parent directories as needed and copy the missing file from this skill's `resources/` directory:
 
 - `resources/ralph.sh` -> `./ralph/ralph.sh`
-- `resources/CODEX.md` -> `./ralph/CODEX.md`
+- `resources/RALPH.md` -> `./ralph/RALPH.md`
 
 After copying `./ralph/ralph.sh`, make it executable:
 
@@ -38,7 +38,14 @@ This skill is responsible for ensuring the project-local `./ralph/` runtime file
 
 Do not copy the entire `resources/` directory. Copy only the specific missing runtime files listed above.
 
-Do not overwrite an existing `./ralph/ralph.sh` or `./ralph/CODEX.md` unless the user explicitly asks for it.
+Do not overwrite an existing `./ralph/ralph.sh` or `./ralph/RALPH.md` unless the user explicitly asks for it.
+
+The runtime loop is invoked with:
+
+- `./ralph/ralph.sh --tool codex`
+- `./ralph/ralph.sh --tool kimi`
+
+`kimi` should run in yolo mode so it matches Codex's autonomous flow as closely as possible.
 
 ---
 

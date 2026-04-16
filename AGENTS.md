@@ -1,8 +1,8 @@
-# Ralph Skills For Codex
+# Ralph Skills
 
 ## Overview
 
-This repository is a Codex-focused skills project. It provides:
+This repository is a coding-agent skills project. It provides:
 
 - `skills/ralph-prd/` for interactively generating `tasks/prd-[feature-name].md`
 - `skills/ralph-json/` for converting a markdown PRD into `./ralph/prd.json`
@@ -13,7 +13,7 @@ This repository is a Codex-focused skills project. It provides:
 When the user says "使用 ralph" (or "use ralph" / "set up ralph"), copy these files from `/Users/dujiepeng/project/AI/ralph/` into the target project:
 
 - `skills/ralph-json/resources/ralph.sh` -> `ralph/ralph.sh`
-- `skills/ralph-json/resources/CODEX.md` -> `ralph/CODEX.md`
+- `skills/ralph-json/resources/RALPH.md` -> `ralph/RALPH.md`
 - `skills/ralph-prd/` -> `.agents/skills/ralph-prd/`
 - `skills/ralph-json/` -> `.agents/skills/ralph-json/`
 
@@ -33,4 +33,4 @@ chmod +x ralph/ralph.sh
 - Keep `ralph-prd` focused on PRD generation. It should write `tasks/prd-[feature-name].md` and avoid changing the conversion rules.
 - Runtime files that are copied into target projects belong under `skills/ralph-json/resources/`.
 - Business logic belongs in `skills/` or the runtime files under `skills/ralph-json/resources/`, not in shell wrappers.
-- `ralph.sh` is Codex-only. Do not reintroduce multi-tool branching into this repository.
+- `ralph.sh` supports `--tool codex` and `--tool kimi`, and both tools read the same `RALPH.md` prompt.

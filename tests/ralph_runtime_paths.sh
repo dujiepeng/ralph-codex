@@ -12,7 +12,7 @@ BIN_DIR="$TMP_DIR/bin"
 
 mkdir -p "$RUNTIME_DIR" "$BIN_DIR"
 cp "$ROOT_DIR/skills/ralph-json/resources/ralph.sh" "$RUNTIME_DIR/ralph.sh"
-cp "$ROOT_DIR/skills/ralph-json/resources/CODEX.md" "$RUNTIME_DIR/CODEX.md"
+cp "$ROOT_DIR/skills/ralph-json/resources/RALPH.md" "$RUNTIME_DIR/RALPH.md"
 chmod +x "$RUNTIME_DIR/ralph.sh"
 
 cat > "$RUNTIME_DIR/prd.json" <<'EOF'
@@ -45,13 +45,35 @@ if [[ "$ACTUAL_PWD" != "$EXPECTED_PWD" ]]; then
   exit 1
 fi
 
-if ! grep -Fq 'Read the PRD at `ralph/prd.json`' "$ROOT_DIR/skills/ralph-json/resources/CODEX.md"; then
-  echo "Expected CODEX.md to read PRD from ralph/prd.json"
+if ! grep -Fq 'Read the PRD at `ralph/prd.json`' "$ROOT_DIR/skills/ralph-json/resources/RALPH.md"; then
+  echo "Expected RALPH.md to read PRD from ralph/prd.json"
   exit 1
 fi
 
-if ! grep -Fq 'Read the progress log at `ralph/progress.txt`' "$ROOT_DIR/skills/ralph-json/resources/CODEX.md"; then
-  echo "Expected CODEX.md to read progress from ralph/progress.txt"
+if ! grep -Fq 'Read the progress log at `ralph/progress.txt`' "$ROOT_DIR/skills/ralph-json/resources/RALPH.md"; then
+  echo "Expected RALPH.md to read progress from ralph/progress.txt"
+  exit 1
+fi
+
+cat > "$BIN_DIR/kimi" <<EOF
+#!/bin/bash
+set -euo pipefail
+printf '%s\n' "\$*" > "$TMP_DIR/kimi_args.txt"
+printf '%s\n' '<promise>COMPLETE</promise>'
+EOF
+chmod +x "$BIN_DIR/kimi"
+
+(
+  cd "$RUNTIME_DIR"
+  PATH="$BIN_DIR:$PATH" ./ralph.sh --tool kimi 1 > "$TMP_DIR/kimi_run.log"
+)
+
+EXPECTED_KIMI_ARGS="--yolo --print --final-message-only --prompt $(cat "$RUNTIME_DIR/RALPH.md")"
+ACTUAL_KIMI_ARGS="$(cat "$TMP_DIR/kimi_args.txt")"
+
+if [[ "$ACTUAL_KIMI_ARGS" != "$EXPECTED_KIMI_ARGS" ]]; then
+  echo "Expected kimi args: $EXPECTED_KIMI_ARGS"
+  echo "Actual kimi args: $ACTUAL_KIMI_ARGS"
   exit 1
 fi
 

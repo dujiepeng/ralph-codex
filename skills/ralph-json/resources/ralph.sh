@@ -1,23 +1,41 @@
 #!/bin/bash
-# Codex-only Ralph loop.
-# Usage: ./ralph.sh [max_iterations]
+# Ralph execution loop for supported coding CLIs.
+# Usage: ./ralph.sh [--tool <codex|kimi>] [max_iterations]
 
 set -euo pipefail
 
 MAX_ITERATIONS=10
+TOOL="codex"
 
-if [[ $# -gt 1 ]]; then
-  echo "Usage: ./ralph.sh [max_iterations]"
+usage() {
+  echo "Usage: ./ralph.sh [--tool <codex|kimi>] [max_iterations]"
+}
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --tool)
+      if [[ $# -lt 2 ]]; then
+        usage
+        exit 1
+      fi
+      TOOL="$2"
+      shift 2
+      ;;
+    *)
+      if [[ "$1" =~ ^[0-9]+$ ]] && [[ "$MAX_ITERATIONS" == "10" ]]; then
+        MAX_ITERATIONS="$1"
+        shift
+      else
+        usage
+        exit 1
+      fi
+      ;;
+  esac
+done
+
+if [[ "$TOOL" != "codex" && "$TOOL" != "kimi" ]]; then
+  usage
   exit 1
-fi
-
-if [[ $# -eq 1 ]]; then
-  if [[ "$1" =~ ^[0-9]+$ ]]; then
-    MAX_ITERATIONS="$1"
-  else
-    echo "Usage: ./ralph.sh [max_iterations]"
-    exit 1
-  fi
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -26,6 +44,7 @@ PRD_FILE="$SCRIPT_DIR/prd.json"
 PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
 ARCHIVE_DIR="$SCRIPT_DIR/archive"
 LAST_BRANCH_FILE="$SCRIPT_DIR/.last-branch"
+PROMPT_FILE="$SCRIPT_DIR/RALPH.md"
 
 archive_previous_run() {
   local current_branch last_branch date folder_name archive_folder
@@ -87,17 +106,26 @@ archive_previous_run
 track_current_branch
 ensure_progress_file
 
-echo "Starting Ralph - Tool: codex - Max iterations: $MAX_ITERATIONS"
+run_iteration() {
+  if [[ "$TOOL" == "codex" ]]; then
+    codex exec --full-auto < "$PROMPT_FILE"
+    return
+  fi
+
+  kimi --yolo --print --final-message-only --prompt "$(cat "$PROMPT_FILE")"
+}
+
+echo "Starting Ralph - Tool: $TOOL - Max iterations: $MAX_ITERATIONS"
 
 for i in $(seq 1 "$MAX_ITERATIONS"); do
   echo
   echo "==============================================================="
-  echo "  Ralph Iteration $i of $MAX_ITERATIONS (codex)"
+  echo "  Ralph Iteration $i of $MAX_ITERATIONS ($TOOL)"
   echo "==============================================================="
 
   OUTPUT="$(
     cd "$PROJECT_DIR"
-    codex exec --full-auto < "$SCRIPT_DIR/CODEX.md" 2>&1
+    run_iteration 2>&1
   )" || true
   printf '%s\n' "$OUTPUT"
 

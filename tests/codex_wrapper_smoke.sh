@@ -26,7 +26,7 @@ assert_contains() {
   local file="$1"
   local needle="$2"
 
-  if ! grep -Fq "$needle" "$file"; then
+  if ! grep -Fq -- "$needle" "$file"; then
     echo "Expected to find: $needle"
     echo "--- file content ---"
     cat "$file"
@@ -37,7 +37,7 @@ assert_contains() {
 assert_exists "$ROOT_DIR/skills/ralph-prd/SKILL.md"
 assert_exists "$ROOT_DIR/skills/ralph-json/SKILL.md"
 assert_exists "$ROOT_DIR/skills/ralph-json/resources/ralph.sh"
-assert_exists "$ROOT_DIR/skills/ralph-json/resources/CODEX.md"
+assert_exists "$ROOT_DIR/skills/ralph-json/resources/RALPH.md"
 
 assert_missing "$ROOT_DIR/bin"
 assert_missing "$ROOT_DIR/skills/prd"
@@ -49,14 +49,18 @@ assert_contains "$ROOT_DIR/README.md" 'Use `ralph-json` in your current Codex CL
 assert_contains "$ROOT_DIR/README.md" 'tasks/prd-[feature-name].md'
 assert_contains "$ROOT_DIR/README.md" 'skills/ralph-json/resources/'
 assert_contains "$ROOT_DIR/README.md" './ralph/ralph.sh'
+assert_contains "$ROOT_DIR/README.md" './ralph/ralph.sh --tool kimi'
+assert_contains "$ROOT_DIR/README.md" './ralph/RALPH.md'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'name: ralph-prd'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Save to `tasks/prd-[feature-name].md`'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Filename:** `prd-[feature-name].md`'
 assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" 'name: ralph-json'
 assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" 'convert it to `./ralph/prd.json`'
-assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" 'Before writing `./ralph/prd.json`, verify:'
-assert_contains "$ROOT_DIR/skills/ralph-json/resources/CODEX.md" 'Read the PRD at `ralph/prd.json`'
-assert_contains "$ROOT_DIR/skills/ralph-json/resources/CODEX.md" 'Read the progress log at `ralph/progress.txt`'
+assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" './ralph/RALPH.md'
+assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" '--tool kimi'
+assert_contains "$ROOT_DIR/skills/ralph-json/resources/RALPH.md" 'Read the PRD at `ralph/prd.json`'
+assert_contains "$ROOT_DIR/skills/ralph-json/resources/RALPH.md" 'Read the progress log at `ralph/progress.txt`'
 assert_contains "$ROOT_DIR/README.md" './ralph/ralph.sh 10'
+assert_contains "$ROOT_DIR/README.md" './ralph/ralph.sh --tool kimi 10'
 
 echo "PASS"

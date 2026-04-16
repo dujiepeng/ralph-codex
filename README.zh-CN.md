@@ -1,12 +1,12 @@
 [English](./README.md)
 
-# Ralph Skills For Codex
+# Ralph Skills
 
-Ralph 是一套面向 Codex 的工作流，用来把一个功能想法整理成 PRD，再把 PRD 转成 `ralph/prd.json`，最后在目标项目里运行自动实现循环。
+Ralph 是一套面向编码代理的工作流，用来把一个功能想法整理成 PRD，再把 PRD 转成 `ralph/prd.json`，最后在目标项目里运行自动实现循环。
 
 ## 前置条件
 
-- 已安装并登录 Codex CLI
+- 已安装并登录 Codex CLI 或 Kimi CLI
 - 已安装 `jq`
 - 目标项目是一个 git 仓库
 
@@ -17,21 +17,21 @@ Ralph 是一套面向 Codex 的工作流，用来把一个功能想法整理成 
 | `skills/ralph-prd/` | 交互式澄清需求，并生成 `tasks/prd-[feature-name].md` |
 | `skills/ralph-json/` | 把 Ralph PRD markdown 转成 `./ralph/prd.json` |
 | `skills/ralph-json/resources/` | 复制到目标项目 `./ralph/` 下的运行时文件 |
-| `.agents/skills/` | 供本地 Codex 测试使用的项目级 skill |
+| `.agents/skills/` | 供本地测试使用的项目级 skill |
 
 ## 完整流程
 
 推荐流程如下：
 
-1. 先把 `ralph-prd` 和 `ralph-json` 安装到目标项目，或者安装到全局 Codex skills 目录。
-2. 在 Codex 中运行 `ralph-prd`，生成 `tasks/prd-[feature-name].md`。
-3. 在 Codex 中运行 `ralph-json`，把该 PRD 转成 `./ralph/prd.json`。
-4. 在目标项目根目录执行 `./ralph/ralph.sh`，启动实现循环。
+1. 先把 `ralph-prd` 和 `ralph-json` 安装到目标项目，或者安装到全局 skills 目录。
+2. 在当前 Codex CLI 会话或 Kimi CLI 会话中运行 `ralph-prd`，生成 `tasks/prd-[feature-name].md`。
+3. 在当前 Codex CLI 会话或 Kimi CLI 会话中运行 `ralph-json`，把该 PRD 转成 `./ralph/prd.json`。
+4. 在目标项目根目录执行 `./ralph/ralph.sh` 使用默认的 Codex 流程，或者执行 `./ralph/ralph.sh --tool kimi` 启动 Kimi 流程。
 
 `ralph-json` 在写入 `./ralph/prd.json` 之前，还负责确保下面两个运行时文件已经存在：
 
 - `./ralph/ralph.sh`
-- `./ralph/CODEX.md`
+- `./ralph/RALPH.md`
 
 如果其中任意文件缺失，`ralph-json` 应从 `skills/ralph-json/resources/` 复制过来，并执行：
 
@@ -65,7 +65,7 @@ cp -r /path/to/ralph-codex/skills/ralph-json ~/.agents/skills/ralph-json
 
 ## 第二步：运行 `ralph-prd`
 
-在目标项目对应的 Codex 会话里调用 `ralph-prd`。
+在目标项目对应的编码代理会话里调用 `ralph-prd`。
 
 预期输出：
 
@@ -79,7 +79,7 @@ cp -r /path/to/ralph-codex/skills/ralph-json ~/.agents/skills/ralph-json
 
 ## 第三步：运行 `ralph-json`
 
-在同一个目标项目的 Codex 会话里调用 `ralph-json`，并指向上一步生成的 PRD。
+在同一个目标项目的编码代理会话里调用 `ralph-json`，并指向上一步生成的 PRD。
 
 预期输出：
 
@@ -89,7 +89,7 @@ cp -r /path/to/ralph-codex/skills/ralph-json ~/.agents/skills/ralph-json
 
 - 读取 `tasks/prd-[feature-name].md`
 - 把用户故事转成有序的 JSON stories
-- 确保 `./ralph/ralph.sh` 和 `./ralph/CODEX.md` 已存在
+- 确保 `./ralph/ralph.sh` 和 `./ralph/RALPH.md` 已存在
 - 如果脚本是刚复制进来的，会把 `./ralph/ralph.sh` 设为可执行
 
 执行完这一步后，项目里通常会有：
@@ -97,7 +97,7 @@ cp -r /path/to/ralph-codex/skills/ralph-json ~/.agents/skills/ralph-json
 - `tasks/prd-[feature-name].md`
 - `./ralph/prd.json`
 - `./ralph/ralph.sh`
-- `./ralph/CODEX.md`
+- `./ralph/RALPH.md`
 
 ## 第四步：运行 `./ralph/ralph.sh`
 
@@ -107,24 +107,46 @@ cp -r /path/to/ralph-codex/skills/ralph-json ~/.agents/skills/ralph-json
 ./ralph/ralph.sh
 ```
 
-或者显式指定迭代次数上限：
+这会默认使用 Codex。若要显式写出工具：
+
+```bash
+./ralph/ralph.sh --tool codex
+```
+
+或者使用 Kimi：
+
+```bash
+./ralph/ralph.sh --tool kimi
+```
+
+或者为 Codex 显式指定迭代次数上限：
 
 ```bash
 ./ralph/ralph.sh 10
 ```
 
+或者为 Kimi 显式指定迭代次数上限：
+
+```bash
+./ralph/ralph.sh --tool kimi 10
+```
+
 ### 脚本参数
 
-`./ralph/ralph.sh [max_iterations]`
+`./ralph/ralph.sh [--tool <codex|kimi>] [max_iterations]`
 
+- `--tool`：可选，取值为 `codex` 或 `kimi`
 - `max_iterations`：可选的正整数参数
 - 默认值：`10`
 
 行为说明：
 
-- 不传参数时，Ralph 会按 `10` 次迭代运行
+- 如果不传 `--tool`，Ralph 默认使用 `codex`
+- `codex` 会执行 `codex exec --full-auto`
+- `kimi` 会执行 `kimi --yolo --print --final-message-only --prompt ...`
+- 不传迭代次数时，Ralph 会按 `10` 次迭代运行
 - 传参时，必须是数字，例如 `5`、`10`、`20`
-- 如果传入超过一个参数，脚本会打印 usage 并退出
+- 如果传入了不受支持的 `--tool`，脚本会打印 usage 并退出
 - 如果参数不是数字，脚本也会打印 usage 并退出
 
 ### `ralph.sh` 运行期间会生成的文件
