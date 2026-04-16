@@ -23,11 +23,10 @@ Ralph is a Codex-focused skills project for interactive PRD planning and autonom
 2. `ralph-prd` writes `tasks/prd-[feature-name].md`.
 3. Use `ralph-json` in your current Codex CLI session.
 4. `ralph-json` reads the selected `tasks/prd-[feature-name].md` and writes `./ralph/prd.json`.
-5. Run Ralph manually from the target project:
+5. Run Ralph manually from the target project root:
 
 ```bash
-cd ralph
-./ralph.sh 10
+./ralph/ralph.sh 10
 ```
 
 `./ralph.sh` accepts the same optional `max_iterations` argument as before. If omitted, it defaults to `10`.
@@ -48,8 +47,7 @@ chmod +x ./ralph/ralph.sh
 4. Start the loop manually:
 
 ```bash
-cd ralph
-./ralph.sh 10
+./ralph/ralph.sh 10
 ```
 
 Bootstrap only creates these runtime files:
@@ -62,6 +60,7 @@ The later files are created by later steps:
 - `tasks/prd-[feature-name].md` from `ralph-prd`
 - `./ralph/prd.json` from `ralph-json`
 - `./ralph/progress.txt`, `./ralph/.last-branch`, and `./ralph/archive/` from `./ralph.sh`
+- implementation output in the project root (one level above `./ralph/`)
 
 ## Minimal Example
 
@@ -84,8 +83,7 @@ Then in Codex CLI:
 Then back in the terminal:
 
 ```bash
-cd ralph
-./ralph.sh 10
+./ralph/ralph.sh 10
 ```
 
 ## Install Skills Globally

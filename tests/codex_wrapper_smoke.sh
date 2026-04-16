@@ -53,7 +53,10 @@ assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'name: ralph-prd'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Save to `tasks/prd-[feature-name].md`'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Filename:** `prd-[feature-name].md`'
 assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" 'name: ralph-json'
-assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" 'Take a PRD (markdown file or text) and convert it to `./ralph/prd.json`'
+assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" 'convert it to `./ralph/prd.json`'
 assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" 'Before writing `./ralph/prd.json`, verify:'
+assert_contains "$ROOT_DIR/skills/ralph-json/resources/CODEX.md" 'Read the PRD at `ralph/prd.json`'
+assert_contains "$ROOT_DIR/skills/ralph-json/resources/CODEX.md" 'Read the progress log at `ralph/progress.txt`'
+assert_contains "$ROOT_DIR/README.md" './ralph/ralph.sh 10'
 
 echo "PASS"

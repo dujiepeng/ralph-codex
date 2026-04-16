@@ -21,6 +21,7 @@ if [[ $# -eq 1 ]]; then
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 PRD_FILE="$SCRIPT_DIR/prd.json"
 PROGRESS_FILE="$SCRIPT_DIR/progress.txt"
 ARCHIVE_DIR="$SCRIPT_DIR/archive"
@@ -94,7 +95,10 @@ for i in $(seq 1 "$MAX_ITERATIONS"); do
   echo "  Ralph Iteration $i of $MAX_ITERATIONS (codex)"
   echo "==============================================================="
 
-  OUTPUT="$(codex exec --full-auto < "$SCRIPT_DIR/CODEX.md" 2>&1)" || true
+  OUTPUT="$(
+    cd "$PROJECT_DIR"
+    codex exec --full-auto < "$SCRIPT_DIR/CODEX.md" 2>&1
+  )" || true
   printf '%s\n' "$OUTPUT"
 
   if echo "$OUTPUT" | grep -q "<promise>COMPLETE</promise>"; then
