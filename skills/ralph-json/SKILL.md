@@ -12,7 +12,33 @@ Converts existing PRDs to the prd.json format that Ralph uses for autonomous exe
 
 ## The Job
 
-Take a PRD (markdown file or text) and convert it to `./ralph/prd.json` in your ralph directory.
+Before converting a PRD, check whether these runtime files already exist:
+
+- `./ralph/ralph.sh`
+- `./ralph/CODEX.md`
+
+If either file is missing, create parent directories as needed and copy the missing file from this skill's `resources/` directory:
+
+- `resources/ralph.sh` -> `./ralph/ralph.sh`
+- `resources/CODEX.md` -> `./ralph/CODEX.md`
+
+After copying `./ralph/ralph.sh`, make it executable:
+
+```bash
+chmod +x ralph/ralph.sh
+```
+
+Then take a PRD (markdown file or text) and convert it to `./ralph/prd.json` in the project's `ralph` directory.
+
+---
+
+## Bootstrapping Ralph
+
+This skill is responsible for ensuring the project-local `./ralph/` runtime files exist before writing `./ralph/prd.json`.
+
+Do not copy the entire `resources/` directory. Copy only the specific missing runtime files listed above.
+
+Do not overwrite an existing `./ralph/ralph.sh` or `./ralph/CODEX.md` unless the user explicitly asks for it.
 
 ---
 
