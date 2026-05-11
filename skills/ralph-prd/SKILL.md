@@ -1,21 +1,22 @@
 ---
 name: ralph-prd
-description: "Generate a Product Requirements Document (PRD) for a new feature. Use when planning a feature, starting a new project, or when asked to create a PRD. Triggers on: ralph-prd, create a prd, write prd for, plan this feature, requirements for, spec out."
+description: "Generate a Product Requirements Document (PRD) for a new feature or a full project. Use when planning a feature, starting a new project, or when asked to create a PRD. Triggers on: ralph-prd, create a prd, write prd for, plan this feature, requirements for, spec out, full project, build an app."
 user-invocable: true
 ---
 
 # PRD Generator
 
-Create detailed Product Requirements Documents that are clear, actionable, and suitable for implementation.
+Create detailed Product Requirements Documents that are clear, actionable, and suitable for implementation. Use a lightweight feature PRD for changes inside an existing product, and a fuller project blueprint PRD for new applications or complete projects.
 
 ---
 
 ## The Job
 
-1. Receive a feature description from the user
-2. Ask 3-5 essential clarifying questions (with lettered options)
-3. Generate a structured PRD based on answers
-4. Save to `tasks/prd-[feature-name].md`
+1. Receive a feature or project description from the user
+2. Detect whether the request is for a feature or a full project
+3. Ask essential clarifying questions (with lettered options)
+4. Generate a structured PRD based on answers
+5. Save to `tasks/prd-[feature-name].md`
 
 **Important:** Do NOT start implementing. Just create the PRD.
 
@@ -23,12 +24,25 @@ Create detailed Product Requirements Documents that are clear, actionable, and s
 
 ## Step 1: Clarifying Questions
 
-Ask only critical questions where the initial prompt is ambiguous. Focus on:
+First classify the request:
+
+- **Feature PRD:** the user is adding or changing capability inside an existing project.
+- **Full Project Blueprint:** the user wants to create a complete app, site, service, tool, or system from scratch or from a broad idea.
+
+Ask only critical questions where the initial prompt is ambiguous. For feature PRDs, ask 3-5 questions. For full project PRDs, ask enough to produce an implementable blueprint, typically 5-8 questions. Focus on:
 
 - **Problem/Goal:** What problem does this solve?
 - **Core Functionality:** What are the key actions?
 - **Scope/Boundaries:** What should it NOT do?
 - **Success Criteria:** How do we know it's done?
+
+For full project PRDs, also clarify:
+
+- **Users and Roles:** who uses the system, and what permissions they have
+- **Platforms:** web, mobile, desktop, API-only, CLI, or other delivery targets
+- **Data and Persistence:** core entities, stored state, imports/exports, and external services
+- **Technical Preferences:** required stack, deployment target, authentication, payments, AI services, or other integrations
+- **First Release Scope:** what must be in the initial usable version versus later releases
 
 ### Format Questions Like This:
 
@@ -120,6 +134,59 @@ Remaining questions or areas needing clarification.
 
 ---
 
+## Full Project Blueprint
+
+When the request is for a full project, generate a project-level PRD instead of the lighter feature PRD. The PRD must be complete enough for `ralph-json` to split into small Ralph stories while preserving the whole product intent.
+
+Use these sections:
+
+### 1. Product Overview
+Describe the product, target users, primary problem, and first-release value proposition.
+
+### 2. Goals and Non-Goals
+List measurable project goals and explicit out-of-scope items for the first release.
+
+### 3. User Roles and Permissions
+Define each role, what it can view, create, update, delete, approve, administer, or export.
+
+### 4. Core Workflows
+Describe the main end-to-end user journeys, including empty states, error states, and completion states.
+
+### 5. Pages, Routes, and Navigation
+List the screens, routes, layouts, navigation surfaces, and major states for each page.
+
+### 6. Functional Requirements
+Number every requirement. Include create/read/update/delete behavior, validation rules, search/filter/sort behavior, notifications, imports/exports, and admin actions when relevant.
+
+### 7. Data Model
+Define the core entities, fields, relationships, required/optional values, lifecycle states, and retention expectations.
+
+### 8. API, Integrations, and Services
+Describe backend operations, external APIs, authentication providers, payment systems, AI services, storage, email, webhooks, or background jobs.
+
+### 9. Project Structure
+Specify expected app modules, directory structure, shared components, configuration files, environment variables, and seed/demo data.
+
+### 10. UX and Visual Design
+Define layout expectations, interaction patterns, responsive behavior, accessibility needs, and any branding or design-system constraints.
+
+### 11. Non-Functional Requirements
+Cover performance, security, privacy, accessibility, reliability, logging, monitoring, maintainability, and browser/device support.
+
+### 12. Testing and Acceptance Strategy
+List required unit, integration, end-to-end, browser, build, lint, typecheck, and manual verification expectations.
+
+### 13. Execution Plan
+Break the project into Ralph-sized milestones and user stories. Start with project scaffolding and tooling, then data model, backend/service logic, UI workflows, validation/error states, tests, polish, documentation, and deployment readiness. Each story should still be small enough to complete in one focused Ralph iteration.
+
+### 14. Launch Readiness
+Define run instructions, deployment target, environment setup, smoke checks, documentation, and release criteria.
+
+### 15. Open Questions
+List any unresolved choices and the default assumption to use if the user does not answer.
+
+---
+
 ## Writing for Junior Developers
 
 The PRD reader may be a junior developer or AI agent. Therefore:
@@ -129,6 +196,7 @@ The PRD reader may be a junior developer or AI agent. Therefore:
 - Provide enough detail to understand purpose and core logic
 - Number requirements for easy reference
 - Use concrete examples where helpful
+- For full projects, describe the complete first usable release before decomposing it into small implementation stories
 
 ---
 
@@ -235,7 +303,9 @@ Before saving the PRD:
 
 - [ ] Asked clarifying questions with lettered options
 - [ ] Incorporated user's answers
+- [ ] Correctly classified the request as feature PRD or Full Project Blueprint
 - [ ] User stories are small and specific
 - [ ] Functional requirements are numbered and unambiguous
 - [ ] Non-goals section defines clear boundaries
+- [ ] For full projects, included project structure, data model, workflows, testing strategy, execution plan, and launch readiness
 - [ ] Saved to `tasks/prd-[feature-name].md`

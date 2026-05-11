@@ -44,8 +44,8 @@ assert_missing "$ROOT_DIR/skills/prd"
 assert_missing "$ROOT_DIR/skills/ralph"
 assert_missing "$ROOT_DIR/ralph"
 
-assert_contains "$ROOT_DIR/README.md" 'Use `ralph-prd` in your current Codex CLI session'
-assert_contains "$ROOT_DIR/README.md" 'Use `ralph-json` in your current Codex CLI session'
+assert_contains "$ROOT_DIR/README.md" 'Use `ralph-prd` in your current Codex CLI session or Kimi CLI session'
+assert_contains "$ROOT_DIR/README.md" 'Use `ralph-json` in your current Codex CLI session or Kimi CLI session'
 assert_contains "$ROOT_DIR/README.md" 'tasks/prd-[feature-name].md'
 assert_contains "$ROOT_DIR/README.md" 'skills/ralph-json/resources/'
 assert_contains "$ROOT_DIR/README.md" './ralph/ralph.sh'
@@ -54,6 +54,11 @@ assert_contains "$ROOT_DIR/README.md" './ralph/RALPH.md'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'name: ralph-prd'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Save to `tasks/prd-[feature-name].md`'
 assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Filename:** `prd-[feature-name].md`'
+assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Full Project Blueprint'
+assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Detect whether the request is for a feature or a full project'
+assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Project Structure'
+assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Data Model'
+assert_contains "$ROOT_DIR/skills/ralph-prd/SKILL.md" 'Execution Plan'
 assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" 'name: ralph-json'
 assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" 'convert it to `./ralph/prd.json`'
 assert_contains "$ROOT_DIR/skills/ralph-json/SKILL.md" './ralph/RALPH.md'

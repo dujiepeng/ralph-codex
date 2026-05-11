@@ -2,7 +2,7 @@
 
 # Ralph Skills
 
-Ralph is a coding-agent workflow for turning a feature idea into a PRD, converting that PRD into `ralph/prd.json`, and then running an autonomous implementation loop from the target project.
+Ralph is a coding-agent workflow for turning a feature or full project idea into a PRD, converting that PRD into `ralph/prd.json`, and then running an autonomous implementation loop from the target project.
 
 ## Prerequisites
 
@@ -14,7 +14,7 @@ Ralph is a coding-agent workflow for turning a feature idea into a PRD, converti
 
 | Path | Purpose |
 |------|---------|
-| `skills/ralph-prd/` | Interactively clarify a feature and save `tasks/prd-[feature-name].md` |
+| `skills/ralph-prd/` | Interactively clarify a feature or full project and save `tasks/prd-[feature-name].md` |
 | `skills/ralph-json/` | Convert a Ralph PRD markdown file into `./ralph/prd.json` |
 | `skills/ralph-json/resources/` | Runtime files copied into target projects as `./ralph/` |
 | `.agents/skills/` | Project-local skills for local testing |
@@ -27,6 +27,11 @@ The intended flow is:
 2. Use `ralph-prd` in your current Codex CLI session or Kimi CLI session to generate `tasks/prd-[feature-name].md`.
 3. Use `ralph-json` in your current Codex CLI session or Kimi CLI session to convert that PRD into `./ralph/prd.json`.
 4. In the target project root, run `./ralph/ralph.sh` for the default Codex flow, or `./ralph/ralph.sh --tool kimi` to execute the Kimi flow.
+
+`ralph-prd` supports two PRD shapes:
+
+- **Feature PRD:** for adding or changing capability inside an existing project.
+- **Full Project Blueprint:** for creating a complete app, site, service, tool, or system. This mode captures product scope, roles, workflows, pages/routes, data model, integrations, project structure, UX expectations, non-functional requirements, testing strategy, execution plan, and launch readiness before Ralph splits the work into small implementation stories.
 
 `ralph-json` is also responsible for ensuring these runtime files exist before it writes `./ralph/prd.json`:
 
@@ -73,8 +78,9 @@ Expected output:
 
 What `ralph-prd` does:
 
+- detects whether the request is for a feature or a full project
 - asks clarifying questions
-- writes a structured PRD
+- writes a structured feature PRD or full project blueprint
 - stops at planning only and does not implement anything
 
 ## Step 3: Run `ralph-json`
@@ -164,8 +170,8 @@ Implementation changes are made in the project root, not inside `./ralph/`.
 In the target project:
 
 1. Install `ralph-prd` and `ralph-json`
-2. Run `ralph-prd`
-3. Save the result to `tasks/prd-my-feature.md`
+2. Run `ralph-prd` for a feature or full project idea
+3. Save the result to `tasks/prd-my-feature.md` or `tasks/prd-my-project.md`
 4. Run `ralph-json`
 5. Generate `./ralph/prd.json`
 6. Run `./ralph/ralph.sh 10`
